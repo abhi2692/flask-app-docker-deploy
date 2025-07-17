@@ -1,8 +1,8 @@
 FROM python:3.9-slim
 
 WORKDIR /app
-COPY /app/requirements.txt requirements.txt
+COPY app/requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
+COPY app/ ./app
 EXPOSE 80
-CMD ["python", "app.py"]
+CMD ["python", "app/app.py"]
