@@ -1,9 +1,11 @@
 #!/bin/bash
+echo "ECR_REGISTRY=$ECR_REGISTRY"
+echo "ECR_REPOSITORY=$ECR_REPOSITORY"
+echo "IMAGE_TAG=$IMAGE_TAG"
+echo "AWS_REGION=$AWS_REGION"
 
-# Authenticate with ECR
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
-
-# Pull and restart container
-docker rm -f flask-app || true
 docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-docker run -d -p 80:80 --name flask-app $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+docker stop flask-app || true
+docker rm flask-app || true
+docker run -d -p 80:5000 --name flask-app $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
