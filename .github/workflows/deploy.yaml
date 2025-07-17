@@ -47,7 +47,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: IMAGE_TAG,ECR_REPOSITORY,ECR_REGISTRY
+          envs: IMAGE_TAG,ECR_REPOSITORY,ECR_REGISTRY, AWS_REGION
           script: |
             chmod +x ~/scripts/deploy.sh
             bash ~/scripts/deploy.sh
