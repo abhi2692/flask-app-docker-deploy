@@ -49,6 +49,20 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: IMAGE_TAG,ECR_REPOSITORY,ECR_REGISTRY
           script: |
-            chmod +x ~/deploy.sh
-            bash ~/deploy.sh
+            ls -l ~/
+            echo "---------"
+            ls -l ~/deploy.sh
+            echo "---------"
+            cat ~/deploy.sh
+            
+      # - name: SSH and Deploy to EC2
+      #   uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ec2-user
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     envs: IMAGE_TAG,ECR_REPOSITORY,ECR_REGISTRY
+      #     script: |
+      #       chmod +x ~/deploy.sh
+      #       bash ~/deploy.sh
           
