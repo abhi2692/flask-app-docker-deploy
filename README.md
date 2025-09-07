@@ -14,8 +14,7 @@ flask-app-docker-deploy/
 ├── app/
 │   ├── app.py                  # Flask application
 │   └── requirements.txt        # Python dependencies
-└── scripts/
-    └── deploy.sh               # EC2 deployment script
+
 ```
 
 ## ⚙️ How It Works
@@ -24,9 +23,9 @@ flask-app-docker-deploy/
    GitHub Actions builds the Docker image and pushes it to AWS ECR on every push to `main`.
 
 2. **Deploy to EC2:**  
-   The workflow uploads `deploy.sh` to your EC2 instance and runs it via SSH.  
-   The script pulls the latest image from ECR and runs the Flask app in a Docker container.
-
+   The workflow connects to your EC2 instance via SSH and runs deployment commands directly.  
+   It pulls the latest image from ECR and runs the Flask app in a Docker container.
+   
 ## 🏗️ EC2 Infrastructure
 
 This project assumes an EC2 instance is already created. You can:
@@ -36,9 +35,10 @@ This project assumes an EC2 instance is already created. You can:
 
 Make sure you:
 
-- Allow inbound HTTP (port 80) and SSH (port 22)
-- Upload the public key of your SSH keypair to EC2
-- Store the private key in your GitHub repo secrets
+- Allow inbound HTTP (port 80) for app access  
+- Allow inbound SSH (port 22) for deployment  
+- Upload the public key of your SSH keypair to EC2  
+- Store the private key in your GitHub repo secrets 
 
 ## 🔐 Required GitHub Secrets
 
@@ -58,3 +58,27 @@ Set these secrets in your GitHub repository:
 2. GitHub Actions will build, push, and deploy automatically.
 
 ##
+
+---
+
+## ⚠️ Security Note
+
+For **testing/demo purposes**, you can open SSH (`port 22`) on your EC2 to `0.0.0.0/0`.  
+This allows GitHub Actions runners to connect from anywhere.  
+
+👉 **However, this is not secure for production.** Here are better options:  
+
+1. **Allow only GitHub Actions IP ranges**  
+   - GitHub publishes runner IPs [here](https://api.github.com/meta).  
+   - Update your Security Group to allow only those ranges.  
+
+2. **Use a Bastion Host**  
+   - Keep your app EC2 private.  
+   - GitHub connects to the bastion → bastion connects to app EC2.  
+
+3. **Self-Hosted Runner**  
+   - Run GitHub Actions runner *inside* your AWS VPC.  
+   - No public SSH access required at all.  
+
+For this beginner-friendly project, option **1 (open to 0.0.0.0/0 temporarily)** is fine.  
+But in a **real-world setup**, use option **2 or 3** for secure deployments. 
